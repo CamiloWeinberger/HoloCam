@@ -1,0 +1,724 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>1242</width>
+    <height>833</height>
+   </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Preferred" vsizetype="Preferred">
+    <horstretch>1</horstretch>
+    <verstretch>1</verstretch>
+   </sizepolicy>
+  </property>
+  <property name="mouseTracking">
+   <bool>false</bool>
+  </property>
+  <property name="tabletTracking">
+   <bool>false</bool>
+  </property>
+  <property name="windowTitle">
+   <string>Hologram miscrocopy</string>
+  </property>
+  <property name="windowIcon">
+   <iconset theme="weather-clear-night">
+    <normaloff>.</normaloff>.</iconset>
+  </property>
+  <property name="windowOpacity">
+   <double>1.000000000000000</double>
+  </property>
+  <property name="autoFillBackground">
+   <bool>false</bool>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <property name="dockNestingEnabled">
+   <bool>false</bool>
+  </property>
+  <widget class="QWidget" name="main">
+   <widget class="QPushButton" name="start">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>620</y>
+      <width>151</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Preview</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="name1">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>20</y>
+      <width>401</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="mouseTracking">
+     <bool>false</bool>
+    </property>
+    <property name="layoutDirection">
+     <enum>Qt::LeftToRight</enum>
+    </property>
+    <property name="text">
+     <string>Image RAW</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="name3">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>20</y>
+      <width>401</width>
+      <height>51</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Phase reconstruction</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="name2">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>29</y>
+      <width>401</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="font">
+     <font>
+      <family>Arial</family>
+      <pointsize>20</pointsize>
+     </font>
+    </property>
+    <property name="text">
+     <string>Amplitude reconstruction</string>
+    </property>
+   </widget>
+   <widget class="QGroupBox" name="Holoprop">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>500</y>
+      <width>391</width>
+      <height>281</height>
+     </rect>
+    </property>
+    <property name="title">
+     <string>Hologram parameters</string>
+    </property>
+    <widget class="QLineEdit" name="wavelength">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>30</y>
+       <width>113</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>405</string>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="holo_size">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>60</y>
+       <width>113</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>6</string>
+     </property>
+    </widget>
+    <widget class="QSlider" name="horizontalSlider">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>200</x>
+       <y>180</y>
+       <width>111</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="maximum">
+      <number>100</number>
+     </property>
+     <property name="pageStep">
+      <number>1</number>
+     </property>
+     <property name="orientation">
+      <enum>Qt::Horizontal</enum>
+     </property>
+    </widget>
+    <widget class="QLabel" name="z0">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>30</y>
+       <width>141</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Wavelength</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="h_holo">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>60</y>
+       <width>141</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Hologram size</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="z0_3">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>30</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>nm</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="z0_4">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>60</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>mm</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="z0_6">
+     <property name="geometry">
+      <rect>
+       <x>170</x>
+       <y>180</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>um</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="z0_7">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>150</y>
+       <width>271</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Soft Distance (from 0.635 to 0.645 mm)</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="distance">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>90</y>
+       <width>113</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>15</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="z0_8">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>90</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>mm</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="z0_9">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>90</y>
+       <width>141</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Distance from detector</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="pos_value">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>180</y>
+       <width>121</width>
+       <height>20</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string/>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLineEdit" name="im_resol">
+     <property name="enabled">
+      <bool>false</bool>
+     </property>
+     <property name="geometry">
+      <rect>
+       <x>190</x>
+       <y>120</y>
+       <width>113</width>
+       <height>21</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>720</string>
+     </property>
+    </widget>
+    <widget class="QLabel" name="z0_10">
+     <property name="geometry">
+      <rect>
+       <x>310</x>
+       <y>120</y>
+       <width>31</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>px</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+    <widget class="QLabel" name="z0_11">
+     <property name="geometry">
+      <rect>
+       <x>50</x>
+       <y>120</y>
+       <width>141</width>
+       <height>16</height>
+      </rect>
+     </property>
+     <property name="text">
+      <string>Image resolution</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::AutoText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </widget>
+   <widget class="QPushButton" name="savePhoto">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>750</x>
+      <y>620</y>
+      <width>151</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save frame</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>icons/camera.png</normaloff>icons/camera.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
+    </property>
+   </widget>
+   <widget class="QLabel" name="raw_image">
+    <property name="enabled">
+     <bool>true</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>80</y>
+      <width>400</width>
+      <height>400</height>
+     </rect>
+    </property>
+    <property name="lineWidth">
+     <number>1</number>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QLabel" name="im_amp">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>80</y>
+      <width>400</width>
+      <height>400</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+    <property name="scaledContents">
+     <bool>false</bool>
+    </property>
+    <property name="alignment">
+     <set>Qt::AlignCenter</set>
+    </property>
+    <property name="wordWrap">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="im_ph">
+    <property name="geometry">
+     <rect>
+      <x>830</x>
+      <y>80</y>
+      <width>400</width>
+      <height>400</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stop">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>580</x>
+      <y>620</y>
+      <width>151</width>
+      <height>161</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop preview</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="startRec">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>680</y>
+      <width>141</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Start Record</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>icons/record.png</normaloff>icons/record.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>60</width>
+      <height>60</height>
+     </size>
+    </property>
+    <property name="autoDefault">
+     <bool>false</bool>
+    </property>
+    <property name="default">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="time">
+    <property name="geometry">
+     <rect>
+      <x>1030</x>
+      <y>610</y>
+      <width>171</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string/>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="stopRec">
+    <property name="enabled">
+     <bool>false</bool>
+    </property>
+    <property name="geometry">
+     <rect>
+      <x>1060</x>
+      <y>680</y>
+      <width>141</width>
+      <height>101</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Stop and Save</string>
+    </property>
+    <property name="icon">
+     <iconset>
+      <normaloff>icons/stop.png</normaloff>icons/stop.png</iconset>
+    </property>
+    <property name="iconSize">
+     <size>
+      <width>30</width>
+      <height>35</height>
+     </size>
+    </property>
+    <property name="checkable">
+     <bool>false</bool>
+    </property>
+   </widget>
+   <widget class="QLabel" name="time_label">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>610</y>
+      <width>101</width>
+      <height>31</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Frames saved:</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="name_video">
+    <property name="geometry">
+     <rect>
+      <x>1030</x>
+      <y>550</y>
+      <width>171</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Video_01</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="time_label_2">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>550</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>File name</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="fps">
+    <property name="geometry">
+     <rect>
+      <x>1030</x>
+      <y>580</y>
+      <width>171</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>20</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="time_label_3">
+    <property name="geometry">
+     <rect>
+      <x>910</x>
+      <y>580</y>
+      <width>101</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Frames per second</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="connectCam">
+    <property name="geometry">
+     <rect>
+      <x>420</x>
+      <y>510</y>
+      <width>151</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Connect camera</string>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="cam_number">
+    <property name="geometry">
+     <rect>
+      <x>630</x>
+      <y>530</y>
+      <width>171</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>0</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="time_label_4">
+    <property name="geometry">
+     <rect>
+      <x>590</x>
+      <y>530</y>
+      <width>51</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>USB</string>
+    </property>
+   </widget>
+  </widget>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>1242</width>
+     <height>22</height>
+    </rect>
+   </property>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
