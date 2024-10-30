@@ -24,6 +24,7 @@ class windows(QMainWindow):
         self.record = 0
         self.f1 = None
         self.cap = None
+        self.distance_det = 15
         #self.f1_i = None
         loadUi('Microscope.ui',self)
         if self.pp is None:
@@ -104,7 +105,7 @@ class windows(QMainWindow):
 
     
     def Run(self):
-        try: 
+        if self.cap.isOpened(): 
             ret, frame = self.cap.read()
             crop = self.pp.shape[0]
             w, h,c = frame.shape
@@ -124,17 +125,17 @@ class windows(QMainWindow):
             except:      
                 lmbd = 0
             try:
-                distance = float(self.distance.text())
+                z0_start = float(self.distance.text())*1e-6
             except:       
-                distance = 0
+                z0_start = 0
             try:
                 h_size =  float(self.holo_size.text())    
             except:
                 h_size = 0
                 
-            z0 = z0_start+float(self.horizontalSlider.value())*z0_step + z0_step
+            z0 = z0_start+float(self.horizontalSlider.value())*z0_step + 1e-12
             self.pos_value.setText(str((z0*1e6)))
-            s0 = z0*h_size/(distance+1e-9)
+            s0 = z0*h_size/(self.distance_det)
             try:
                 imag_amp, phase = modifier(image.to(device), lmbd, float(self.im_resol.text()),s0,z0,self.pp,self.f1)
                 imag_amp = imag_amp.cpu()
@@ -156,8 +157,6 @@ class windows(QMainWindow):
 
             except:
                 a = 1
-        except:
-            a = 1
 
 
 def set_single_channel_image_from_numpy(label: QLabel, np_image: np.ndarray):
