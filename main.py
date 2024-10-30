@@ -103,56 +103,59 @@ class windows(QMainWindow):
         im.save('./Captures/' + self.name_video.text() + '_frame_' +  str(self.Nframes) + '.bmp')
 
     
-    def Run(self): 
-        ret, frame = self.cap.read()
-        crop = self.pp.shape[0]
-        w, h,c = frame.shape
-        #image = torch.from_numpy(plt.imread('test.bmp')[:,:,1]).float()#.to(device)
-        if crop<w:
-            image = torch.from_numpy(frame[int((w-crop)/2):int((crop-w)/2),int((h-crop)/2):int((crop-h)/2),1]).float()
-            
-        else:
-            image = torch.from_numpy(frame[:,:,1]).float()
-            if image.shape[1] > image.shape[0]:
-                image = torch.from_numpy(frame[:,int((h-w)/2):int((w-h)/2),1]).float()
-            
-            
-        # Check miss variables
-        try:
-            lmbd =  float(self.wavelength.text())*1e-9
-        except:      
-            lmbd = 0
-        try:
-            distance = float(self.distance.text())
-        except:       
-            distance = 0
-        try:
-            h_size =  float(self.holo_size.text())    
-        except:
-            h_size = 0
-            
-        z0 = z0_start+float(self.horizontalSlider.value())*z0_step + z0_step
-        self.pos_value.setText(str((z0*1e6)))
-        s0 = z0*h_size/(distance+1e-9)
-        try:
-            imag_amp, phase = modifier(image.to(device), lmbd, float(self.im_resol.text()),s0,z0,self.pp,self.f1)
-            imag_amp = imag_amp.cpu()
-            phase = phase.cpu()
-            set_single_channel_image_from_numpy(self.raw_image, image)
-            set_single_channel_image_from_numpy(self.im_amp,    imag_amp)
-            set_single_channel_image_from_numpy(self.im_ph,     phase)    
-            ff = torch.cat((image,imag_amp),1)
-            ff = torch.cat((ff,phase),1) 
-            self.image = np.uint8(torch.stack((ff,)*3, axis=0).permute(1,2,0).numpy())
-
-            if self.record == 1:
-                self.frame.write(self.image)
-                self.Nframes += 1
+    def Run(self):
+        try: 
+            ret, frame = self.cap.read()
+            crop = self.pp.shape[0]
+            w, h,c = frame.shape
+            #image = torch.from_numpy(plt.imread('test.bmp')[:,:,1]).float()#.to(device)
+            if crop<w:
+                image = torch.from_numpy(frame[int((w-crop)/2):int((crop-w)/2),int((h-crop)/2):int((crop-h)/2),1]).float()
+                
             else:
-                self.frame = None
-                self.Nframes = 0  
-            self.time.setText(str(self.Nframes))
+                image = torch.from_numpy(frame[:,:,1]).float()
+                if image.shape[1] > image.shape[0]:
+                    image = torch.from_numpy(frame[:,int((h-w)/2):int((w-h)/2),1]).float()
+                
+                
+            # Check miss variables
+            try:
+                lmbd =  float(self.wavelength.text())*1e-9
+            except:      
+                lmbd = 0
+            try:
+                distance = float(self.distance.text())
+            except:       
+                distance = 0
+            try:
+                h_size =  float(self.holo_size.text())    
+            except:
+                h_size = 0
+                
+            z0 = z0_start+float(self.horizontalSlider.value())*z0_step + z0_step
+            self.pos_value.setText(str((z0*1e6)))
+            s0 = z0*h_size/(distance+1e-9)
+            try:
+                imag_amp, phase = modifier(image.to(device), lmbd, float(self.im_resol.text()),s0,z0,self.pp,self.f1)
+                imag_amp = imag_amp.cpu()
+                phase = phase.cpu()
+                set_single_channel_image_from_numpy(self.raw_image, image)
+                set_single_channel_image_from_numpy(self.im_amp,    imag_amp)
+                set_single_channel_image_from_numpy(self.im_ph,     phase)    
+                ff = torch.cat((image,imag_amp),1)
+                ff = torch.cat((ff,phase),1) 
+                self.image = np.uint8(torch.stack((ff,)*3, axis=0).permute(1,2,0).numpy())
 
+                if self.record == 1:
+                    self.frame.write(self.image)
+                    self.Nframes += 1
+                else:
+                    self.frame = None
+                    self.Nframes = 0  
+                self.time.setText(str(self.Nframes))
+
+            except:
+                a = 1
         except:
             a = 1
 
