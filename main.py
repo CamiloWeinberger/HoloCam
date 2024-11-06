@@ -1,12 +1,13 @@
 import sys
 from PyQt6.QtWidgets import QApplication, QMainWindow, QLabel
-from PyQt6.QtGui import QPixmap, QImage
+from PyQt6.QtGui import QPixmap, QImage, QPainter, QPen
 from PyQt6.uic import loadUi
 from PyQt6.QtCore import Qt, QTimer
 import torch
 from modifier import *
 import cv2
 from PIL import Image
+
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 z0_start = 0.000625     # start source-to-sample distance in meter
@@ -30,7 +31,8 @@ class windows(QMainWindow):
         if self.pp is None:
             self.pp = define_base(int(self.im_resol.text())).to(device)
             self.f1 = FT2Dc(self.pp).to(device)
-            #self.f1_i = IFT2Dc(self.pp)
+            self.line_amp.setMaximum(self.pp.shape[0])
+
         self.connectCam.clicked.connect(self.InitCam)
         self.start.clicked.connect(self.Start_prev)
         self.stop.clicked.connect(self.Stop_prev)
@@ -68,11 +70,17 @@ class windows(QMainWindow):
             self.startRec.setEnabled(True)
             self.horizontalSlider.setEnabled(True)
             self.savePhoto.setEnabled(True)
+            self.line_amp.setEnabled(True)
         except:
             a = 1
         
     def Start_prev(self):
         self.timer.start(10)
+        
+    
+    def DrawLine(self):
+        self.timer.start(10)
+        
     def Stop_prev(self):
         self.timer.stop()
                 
@@ -98,6 +106,7 @@ class windows(QMainWindow):
             pp_size = 2
         self.pp = define_base(pp_size).to(device)
         self.f1 = FT2Dc(self.pp).to(device)
+        self.line_amp.setMaximum(pp_size)
     
     def saveImage(self):
         im = Image.fromarray(self.image)
@@ -140,9 +149,9 @@ class windows(QMainWindow):
                 imag_amp, phase = modifier(image.to(device), lmbd, float(self.im_resol.text()),s0,z0,self.pp,self.f1)
                 imag_amp = imag_amp.cpu()
                 phase = phase.cpu()
-                set_single_channel_image_from_numpy(self.raw_image, image)
-                set_single_channel_image_from_numpy(self.im_amp,    imag_amp)
-                set_single_channel_image_from_numpy(self.im_ph,     phase)    
+                set_single_channel_image_from_numpy(self.raw_image, image,None)
+                set_single_channel_image_from_numpy(self.im_amp,    imag_amp,self.line_amp.value())
+                set_single_channel_image_from_numpy(self.im_ph,     phase,None)    
                 ff = torch.cat((image,imag_amp),1)
                 ff = torch.cat((ff,phase),1) 
                 self.image = np.uint8(torch.stack((ff,)*3, axis=0).permute(1,2,0).numpy())
@@ -159,7 +168,7 @@ class windows(QMainWindow):
                 a = 1
 
 
-def set_single_channel_image_from_numpy(label: QLabel, np_image: np.ndarray):
+def set_single_channel_image_from_numpy(label: QLabel, np_image: np.ndarray,line_amp):
     """
     Convert a single-channel (grayscale) numpy image array to a QImage and set it in the QLabel.
     
@@ -174,8 +183,15 @@ def set_single_channel_image_from_numpy(label: QLabel, np_image: np.ndarray):
     
     # Convert QImage to QPixmap
     pixmap = QPixmap.fromImage(q_image)
-    #pixmap = QPixmap.fromImage(q_image).scaled(h,w)
-
+    
+    # Create a QPainter object to draw on the QPixmap
+    if line_amp is not None:
+        painter = QPainter(pixmap)
+        pen = QPen(Qt.GlobalColor.red, 3)  # Set the color and thickness of the line
+        painter.setPen(pen)
+        painter.drawLine(line_amp, 0, line_amp, np_image.shape[0])
+        painter.end()
+    
     # Scale the QPixmap to fit the QLabel while keeping the aspect ratio
     scaled_pixmap = pixmap.scaled(label.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
     # Set the QPixmap on the QLabel
