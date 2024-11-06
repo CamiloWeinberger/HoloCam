@@ -7,7 +7,9 @@ import torch
 from modifier import *
 import cv2
 from PIL import Image
-
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
+from matplotlib.figure import Figure
+from io import BytesIO
 
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 z0_start = 0.000625     # start source-to-sample distance in meter
@@ -42,6 +44,8 @@ class windows(QMainWindow):
         self.wavelength.textChanged.connect(self.Run)
         self.im_resol.textChanged.connect(self.Gen_pp)
         self.savePhoto.clicked.connect(self.saveImage)
+
+
         self.timer = QTimer()
         self.timer.timeout.connect(self.Run)
     
@@ -149,11 +153,10 @@ class windows(QMainWindow):
                 imag_amp, phase = modifier(image.to(device), lmbd, float(self.im_resol.text()),s0,z0,self.pp,self.f1)
                 imag_amp = imag_amp.cpu()
                 phase = phase.cpu()
-                set_single_channel_image_from_numpy(self.raw_image, image,None)
-                set_single_channel_image_from_numpy(self.im_amp,    imag_amp,self.line_amp.value())
-                set_single_channel_image_from_numpy(self.im_ph,     phase,None)    
-                ff = torch.cat((image,imag_amp),1)
-                ff = torch.cat((ff,phase),1) 
+                set_single_channel_image_from_numpy(self.raw_image, image,      None)
+                set_single_channel_image_from_numpy(self.im_amp,    imag_amp,   self.line_amp.value())
+                set_single_channel_image_from_numpy(self.im_ph,     phase,      None)    
+                self.plot_on_label(self.im_amp_line, imag_amp[:,self.line_amp.value()])
                 self.image = np.uint8(torch.stack((ff,)*3, axis=0).permute(1,2,0).numpy())
 
                 if self.record == 1:
@@ -166,6 +169,31 @@ class windows(QMainWindow):
 
             except:
                 a = 1
+                
+
+        
+    def plot_on_label(self, label, y):
+            # Create a Matplotlib figure and plot data
+            fig = Figure()
+            canvas = FigureCanvas(fig)
+            ax = fig.add_subplot(111)
+            ax.axis('off')
+            # Example data to plot
+            x = range(y.shape[-1])
+            ax.plot(x, y)
+
+            # Save the plot to a BytesIO buffer as a PNG image
+            buf = BytesIO()
+            canvas.print_png(buf)
+            buf.seek(0)
+
+            # Convert the PNG buffer data to a QPixmap
+            pixmap = QPixmap()
+            pixmap.loadFromData(buf.getvalue())
+            pixmap = pixmap.scaled(label.size())#, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+
+            # Set the QPixmap on the QLabel (self.im_line)
+            label.setPixmap(pixmap)  # Ensure that self.im_line is the QLabel's name in your .ui file
 
 
 def set_single_channel_image_from_numpy(label: QLabel, np_image: np.ndarray,line_amp):
