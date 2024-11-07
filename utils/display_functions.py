@@ -53,7 +53,7 @@ def set_single_channel_image_from_numpy(label: QLabel, np_image: np.ndarray,line
         painter = QPainter(pixmap)
         pen = QPen(Qt.GlobalColor.red, 3)  # Set the color and thickness of the line
         painter.setPen(pen)
-        painter.drawLine(line_amp, 0, line_amp, np_image.shape[0])
+        painter.drawLine(0, line_amp, np_image.shape[0], line_amp)
         painter.end()
     
     # Scale the QPixmap to fit the QLabel while keeping the aspect ratio

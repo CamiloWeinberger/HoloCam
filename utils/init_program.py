@@ -25,13 +25,15 @@ class windows(QMainWindow):
         self.f1 = None
         self.cap = None
         self.distance_det = 15
+        self.rang = None
         #self.f1_i = None
         loadUi('utils/Microscope.ui',self)
         if self.pp is None:
             self.pp = define_base(int(self.im_resol.text())).to(device)
             self.f1 = FT2Dc(self.pp).to(device)
-            self.line_amp.setMaximum(self.pp.shape[0])
-
+            self.yline_amp.setMaximum(self.pp.shape[0])
+            self.rang = range(self.pp.shape[0])
+            
         self.connectCam.clicked.connect(self.InitCam)
         self.start.clicked.connect(self.Start_prev)
         self.stop.clicked.connect(self.Stop_prev)
@@ -41,6 +43,9 @@ class windows(QMainWindow):
         self.wavelength.textChanged.connect(self.Run)
         self.im_resol.textChanged.connect(self.Gen_pp)
         self.savePhoto.clicked.connect(self.saveImage)
+        self.ZoomIn.clicked.connect(self.zoom)
+        self.ZoomOut.clicked.connect(self.zoomout)
+        self.ZoomOrig.clicked.connect(self.zoomorig)
 
 
         self.timer = QTimer()
@@ -107,12 +112,22 @@ class windows(QMainWindow):
             pp_size = 2
         self.pp = define_base(pp_size).to(device)
         self.f1 = FT2Dc(self.pp).to(device)
-        self.line_amp.setMaximum(pp_size)
+        self.yline_amp.setMaximum(pp_size)
+        self.rang = range(self.pp.shape[0])
     
     def saveImage(self):
         im = Image.fromarray(self.image)
         im.save('./Captures/' + self.name_video.text() + '_frame_' +  str(self.Nframes) + '.bmp')
-
+        
+    def zoom(self):
+        out = self.rang[20:-20]
+        self.rang = out
+    def zoomout(self):
+        out = self.rang[20:-20]
+        self.rang = out
+    def zoomorig(self):
+        self.rang = range(self.pp.shape[0])
+        
     
     def Run(self):
         if self.cap.isOpened(): 
@@ -151,9 +166,9 @@ class windows(QMainWindow):
                 imag_amp = imag_amp.cpu()
                 phase = phase.cpu()
                 set_single_channel_image_from_numpy(self.raw_image, image,      None)
-                set_single_channel_image_from_numpy(self.im_amp,    imag_amp,   self.line_amp.value())
-                set_single_channel_image_from_numpy(self.im_ph,     phase,      None)    
-                plot_on_label(self.im_amp_line, imag_amp[:,self.line_amp.value()])
+                set_single_channel_image_from_numpy(self.im_amp,    imag_amp[self.rang][:,self.rang],   self.yline_amp.value())
+                set_single_channel_image_from_numpy(self.im_ph,     phase[self.rang][:,self.rang],      None)    
+                plot_on_label(self.im_amp_line, imag_amp[self.yline_amp.value(),self.rang])
                 self.image = np.uint8(torch.stack((ff,)*3, axis=0).permute(1,2,0).numpy())
 
                 if self.record == 1:
