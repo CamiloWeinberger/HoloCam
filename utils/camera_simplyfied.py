@@ -1,5 +1,5 @@
 import cv2
-from modifier import *
+from utils.modifier import *
 import matplotlib.pyplot as plt
 cap = cv2.VideoCapture(0, cv2.CAP_DSHOW)
 from PIL import Image, ImageDraw
