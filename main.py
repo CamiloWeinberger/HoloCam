@@ -176,12 +176,13 @@ class windows(QMainWindow):
             # Create a Matplotlib figure and plot data
             fig = Figure()
             canvas = FigureCanvas(fig)
-            ax = fig.add_subplot(111)
+            #ax = fig.add_subplot(111)
+            ax = fig.add_axes([0, 0, 1, 1])
             ax.axis('off')
             # Example data to plot
             x = range(y.shape[-1])
+            ax.set_xlim([0,x[-1]])
             ax.plot(x, y)
-
             # Save the plot to a BytesIO buffer as a PNG image
             buf = BytesIO()
             canvas.print_png(buf)
@@ -190,7 +191,7 @@ class windows(QMainWindow):
             # Convert the PNG buffer data to a QPixmap
             pixmap = QPixmap()
             pixmap.loadFromData(buf.getvalue())
-            pixmap = pixmap.scaled(label.size())#, Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+            pixmap = pixmap.scaled(label.size())#, Qt.AspectRatioMode.KeepAspectRatioByExpanding, Qt.TransformationMode.SmoothTransformation)
 
             # Set the QPixmap on the QLabel (self.im_line)
             label.setPixmap(pixmap)  # Ensure that self.im_line is the QLabel's name in your .ui file
