@@ -43,10 +43,10 @@ def set_single_channel_image_from_numpy(label: QLabel, np_image: np.ndarray,line
     # Ensure the image is 2D (grayscale image)
     h, w = np_image.shape
     # Create QImage from numpy array (Format_Grayscale8)
-    q_image = QImage(np.uint8(np_image).data, w, h, QImage.Format.Format_Grayscale8)
-    
+    q_image = QImage(np.uint8(np_image).data, h, h, QImage.Format.Format_Grayscale8)
+    tmp = q_image.copy()
     # Convert QImage to QPixmap
-    pixmap = QPixmap.fromImage(q_image)
+    pixmap = QPixmap.fromImage(tmp)
     
     # Create a QPainter object to draw on the QPixmap
     if line_amp is not None:
@@ -57,7 +57,7 @@ def set_single_channel_image_from_numpy(label: QLabel, np_image: np.ndarray,line
         painter.end()
     
     # Scale the QPixmap to fit the QLabel while keeping the aspect ratio
-    scaled_pixmap = pixmap.scaled(label.size(), Qt.AspectRatioMode.KeepAspectRatio, Qt.TransformationMode.SmoothTransformation)
+    scaled_pixmap = pixmap.scaled(label.size(), Qt.AspectRatioMode.KeepAspectRatio)#, Qt.TransformationMode.SmoothTransformation)
     # Set the QPixmap on the QLabel
     label.setPixmap(scaled_pixmap)
     

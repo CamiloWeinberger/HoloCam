@@ -26,6 +26,7 @@ class windows(QMainWindow):
         self.cap = None
         self.distance_det = 15
         self.rang = None
+        self.maxresol = None
         #self.f1_i = None
         loadUi('utils/Microscope.ui',self)
         if self.pp is None:
@@ -66,7 +67,7 @@ class windows(QMainWindow):
             self.cap = cv2.VideoCapture(int(self.cam_number.text()), cv2.CAP_DSHOW)
             self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2560)
             self.cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 1440)
-            
+            self.maxresol = np.min(self.cap.read()[1].shape[:2])
             self.wavelength.setEnabled(True)
             self.holo_size.setEnabled(True)
             self.distance.setEnabled(True)
@@ -106,8 +107,13 @@ class windows(QMainWindow):
         self.stopRec.setEnabled(False)    
         self.startRec.setEnabled(True)
     def Gen_pp(self):
-        try: 
-            pp_size = int(self.im_resol.text())     
+        try:    
+            pp_size = int(self.im_resol.text())  
+            if pp_size >= self.maxresol:
+                pp_size = self.maxresol
+                self.im_resol.setText(str(pp_size)) 
+            if pp_size == 1270:
+                pp_size =+ 1 
         except:
             pp_size = 2
         self.pp = define_base(pp_size).to(device)
@@ -131,17 +137,17 @@ class windows(QMainWindow):
     
     def Run(self):
         if self.cap.isOpened(): 
-            ret, frame = self.cap.read()
+            frame = self.cap.read()[-1]
             crop = self.pp.shape[0]
             w, h,c = frame.shape
-            #image = torch.from_numpy(plt.imread('test.bmp')[:,:,1]).float()#.to(device)
             if crop<w:
-                image = torch.from_numpy(frame[int((w-crop)/2):int((crop-w)/2),int((h-crop)/2):int((crop-h)/2),1]).float()
+                preframe = frame[int((w-crop)/2):,int((h-crop)/2):,1][:crop,:crop]
+                image = torch.from_numpy(preframe).float()
                 
             else:
                 image = torch.from_numpy(frame[:,:,1]).float()
                 if image.shape[1] > image.shape[0]:
-                    image = torch.from_numpy(frame[:,int((h-w)/2):int((w-h)/2),1]).float()
+                    image = torch.from_numpy(frame[:,int((h-w)/2):,1][:,:w]).float()
                 
                 
             # Check miss variables
@@ -154,7 +160,7 @@ class windows(QMainWindow):
             except:       
                 z0_start = 0
             try:
-                h_size =  float(self.holo_size.text())    
+                h_size =  float(self.holo_size.text())  
             except:
                 h_size = 0
                 

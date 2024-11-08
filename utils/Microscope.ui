@@ -449,7 +449,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/camera.png</normaloff>icons/camera.png</iconset>
+      <normaloff>../icons/camera.png</normaloff>../icons/camera.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -545,7 +545,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/record.png</normaloff>icons/record.png</iconset>
+      <normaloff>../icons/record.png</normaloff>../icons/record.png</iconset>
     </property>
     <property name="iconSize">
      <size>
@@ -590,7 +590,7 @@
     </property>
     <property name="icon">
      <iconset>
-      <normaloff>icons/stop.png</normaloff>icons/stop.png</iconset>
+      <normaloff>../icons/stop.png</normaloff>../icons/stop.png</iconset>
     </property>
     <property name="iconSize">
      <size>
