@@ -113,7 +113,7 @@ class windows(QMainWindow):
                 pp_size = self.maxresol
                 self.im_resol.setText(str(pp_size)) 
             if pp_size == 1270:
-                pp_size =+ 1 
+                pp_size = 1271 
         except:
             pp_size = 2
         self.pp = define_base(pp_size).to(device)

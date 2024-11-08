@@ -43,7 +43,14 @@ def set_single_channel_image_from_numpy(label: QLabel, np_image: np.ndarray,line
     # Ensure the image is 2D (grayscale image)
     h, w = np_image.shape
     # Create QImage from numpy array (Format_Grayscale8)
-    q_image = QImage(np.uint8(np_image).data, h, h, QImage.Format.Format_Grayscale8)
+    # calculate the total number of bytes in the frame 
+    np_image = np.uint8(np_image)
+    totalBytes = np_image.nbytes
+
+    # divide by the number of rows
+    bytesPerLine = int(totalBytes/h)
+    
+    q_image = QImage(np_image.data, h, w, bytesPerLine, QImage.Format.Format_Grayscale8)
     tmp = q_image.copy()
     # Convert QImage to QPixmap
     pixmap = QPixmap.fromImage(tmp)
