@@ -54,15 +54,6 @@ class windows(QMainWindow):
     
     def InitCam(self):
         try:
-            self.wavelength.setEnabled(False)
-            self.holo_size.setEnabled(False)
-            self.distance.setEnabled(False)
-            self.im_resol.setEnabled(False)
-            self.start.setEnabled(False)
-            self.stop.setEnabled(False)
-            self.startRec.setEnabled(False)
-            self.horizontalSlider.setEnabled(False)
-            self.savePhoto.setEnabled(False)
             self.timer.stop()
             self.cap = cv2.VideoCapture(int(self.cam_number.text()), cv2.CAP_DSHOW)
             self.cap.set(cv2.CAP_PROP_FRAME_WIDTH, 2560)
@@ -95,17 +86,14 @@ class windows(QMainWindow):
         self.record = 1
         self.stopRec.setEnabled(True)    
         self.startRec.setEnabled(False)
-        
         self.frame = cv2.VideoWriter('./Videos/' + self.name_video.text() + '.mp4', cv2.VideoWriter_fourcc(*'MP4V'), float(self.fps.text()), (self.pp.shape[0]*3, self.pp.shape[1]))
-        #self.amplitude = cv2.VideoWriter(f'amp.mp4', cv2.VideoWriter_fourcc(*'MP4V'), 25.0, self.pp.shape)
-        #self.phase = cv2.VideoWriter(f'phase.mp4', cv2.VideoWriter_fourcc(*'MP4V'), 25.0, self.pp.shape)
+    
     def Stop_rec(self):
         self.record = 0
         self.frame.release()
-        #self.amplitude.release()
-        #self.phase.release()
         self.stopRec.setEnabled(False)    
         self.startRec.setEnabled(True)
+    
     def Gen_pp(self):
         try:    
             pp_size = int(self.im_resol.text())  
@@ -175,6 +163,8 @@ class windows(QMainWindow):
                 set_single_channel_image_from_numpy(self.im_amp,    imag_amp[self.rang][:,self.rang],   self.yline_amp.value())
                 set_single_channel_image_from_numpy(self.im_ph,     phase[self.rang][:,self.rang],      None)    
                 plot_on_label(self.im_amp_line, imag_amp[self.yline_amp.value(),self.rang])
+                ff = torch.concat((image,imag_amp),dim=1)
+                ff = torch.concat((ff,imag_amp),dim=1)
                 self.image = np.uint8(torch.stack((ff,)*3, axis=0).permute(1,2,0).numpy())
 
                 if self.record == 1:
