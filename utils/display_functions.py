@@ -70,3 +70,20 @@ def set_single_channel_image_from_numpy(label: QLabel, np_image: np.ndarray,line
     
     # Optionally, center the QLabel content
     label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+    
+    
+def set_image_from_numpy(label: QLabel, np_image: np.ndarray):
+    h, w,c = np_image.shape
+    np_image = np.uint8(np_image)
+    
+    totalBytes = np_image.nbytes    
+    bytes_per_line = 3 * w  # 3 bytes per pixel (RGB)
+    # Create QImage from numpy array
+    q_image = QImage(np_image.data, w, h, bytes_per_line, QImage.Format.Format_RGB888)
+
+    tmp = q_image.copy()
+    pixmap = QPixmap.fromImage(tmp)
+    
+    scaled_pixmap = pixmap.scaled(label.size(), Qt.AspectRatioMode.KeepAspectRatio)#, Qt.TransformationMode.SmoothTransformation)
+    label.setPixmap(scaled_pixmap)
+    label.setAlignment(Qt.AlignmentFlag.AlignCenter)

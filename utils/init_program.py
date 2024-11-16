@@ -19,6 +19,7 @@ class windows(QMainWindow):
         super(windows, self).__init__()
         self.pp = None 
         self.frame = None
+        self.frameRAW = None
         self.image = None
         self.Nframes = 0
         self.record = 0
@@ -45,7 +46,7 @@ class windows(QMainWindow):
         self.im_resol.textChanged.connect(self.Gen_pp)
         self.savePhoto.clicked.connect(self.saveImage)
         self.ZoomIn.clicked.connect(self.zoom)
-        self.ZoomOut.clicked.connect(self.zoomout)
+        #self.ZoomOut.clicked.connect(self.zoomout)
         self.ZoomOrig.clicked.connect(self.zoomorig)
 
 
@@ -86,11 +87,13 @@ class windows(QMainWindow):
         self.record = 1
         self.stopRec.setEnabled(True)    
         self.startRec.setEnabled(False)
-        self.frame = cv2.VideoWriter('./Videos/' + self.name_video.text() + '.mp4', cv2.VideoWriter_fourcc(*'MP4V'), float(self.fps.text()), (self.pp.shape[0]*3, self.pp.shape[1]))
+        self.frame = cv2.VideoWriter('./Videos/' + self.name_video.text() + '.mp4', cv2.VideoWriter_fourcc(*'MP4V'), float(self.fps.text()), (self.pp.shape[0]*2, self.pp.shape[1]))
+        self.frameRAW = cv2.VideoWriter('./Videos/' + self.name_video.text() + '_RAW.mp4', cv2.VideoWriter_fourcc(*'MP4V'), float(self.fps.text()), (self.pp.shape[0], self.pp.shape[1]))
     
     def Stop_rec(self):
         self.record = 0
         self.frame.release()
+        self.frameRAW.release()
         self.stopRec.setEnabled(False)    
         self.startRec.setEnabled(True)
     
@@ -129,13 +132,13 @@ class windows(QMainWindow):
             crop = self.pp.shape[0]
             w, h,c = frame.shape
             if crop<w:
-                preframe = frame[int((w-crop)/2):,int((h-crop)/2):,1][:crop,:crop]
+                preframe = frame[int((w-crop)/2):,int((h-crop)/2):,:][:crop,:crop]
                 image = torch.from_numpy(preframe).float()
                 
             else:
                 image = torch.from_numpy(frame[:,:,1]).float()
                 if image.shape[1] > image.shape[0]:
-                    image = torch.from_numpy(frame[:,int((h-w)/2):,1][:,:w]).float()
+                    image = torch.from_numpy(frame[:,int((h-w)/2):,:][:,:w]).float()
                 
                 
             # Check miss variables
@@ -156,19 +159,21 @@ class windows(QMainWindow):
             self.pos_value.setText(str((z0*1e6)))
             s0 = z0*h_size/(self.distance_det)
             try:
-                imag_amp, phase = modifier(image.to(device), lmbd, float(self.im_resol.text()),s0,z0,self.pp,self.f1)
+                image[:,:,:] = image[:,:,[2,1,0]]
+                imag_amp, phase = modifier(image[:,:,1].to(device), lmbd, float(self.im_resol.text()),s0,z0,self.pp,self.f1)
                 imag_amp = imag_amp.cpu()
                 phase = phase.cpu()
-                set_single_channel_image_from_numpy(self.raw_image, image,      None)
-                set_single_channel_image_from_numpy(self.im_amp,    imag_amp[self.rang][:,self.rang],   self.yline_amp.value())
+                ylocation =  int(self.yline_amp.value()/self.yline_amp.maximum()*(self.rang[-1]-self.rang[0]))
+                set_image_from_numpy(self.raw_image, image)
+                set_single_channel_image_from_numpy(self.im_amp,    imag_amp[self.rang][:,self.rang],  ylocation)
                 set_single_channel_image_from_numpy(self.im_ph,     phase[self.rang][:,self.rang],      None)    
-                plot_on_label(self.im_amp_line, imag_amp[self.yline_amp.value(),self.rang])
-                ff = torch.concat((image,imag_amp),dim=1)
-                ff = torch.concat((ff,imag_amp),dim=1)
-                self.image = np.uint8(torch.stack((ff,)*3, axis=0).permute(1,2,0).numpy())
-
+                plot_on_label(self.im_amp_line, imag_amp[ylocation+self.rang[0],self.rang])
+                ff = torch.concat((imag_amp, phase),dim=1)
+                ff = torch.stack((ff,)*3, axis=0).permute(1,2,0)
+                self.image = np.uint8(torch.concat((image,ff),dim=1))
                 if self.record == 1:
-                    self.frame.write(self.image)
+                    self.frame.write(np.uint8(ff))
+                    self.frameRAW.write(np.uint8(image[:,:,[2,1,0]]))
                     self.Nframes += 1
                 else:
                     self.frame = None

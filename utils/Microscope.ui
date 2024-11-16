@@ -148,8 +148,20 @@
        <height>21</height>
       </rect>
      </property>
+     <property name="focusPolicy">
+      <enum>Qt::WheelFocus</enum>
+     </property>
+     <property name="inputMask">
+      <string notr="true" comment="float"/>
+     </property>
      <property name="text">
       <string>405</string>
+     </property>
+     <property name="frame">
+      <bool>true</bool>
+     </property>
+     <property name="readOnly">
+      <bool>false</bool>
      </property>
     </widget>
     <widget class="QLineEdit" name="holo_size">
@@ -744,19 +756,6 @@
    <widget class="QPushButton" name="ZoomIn">
     <property name="geometry">
      <rect>
-      <x>680</x>
-      <y>70</y>
-      <width>41</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Zoom</string>
-    </property>
-   </widget>
-   <widget class="QPushButton" name="ZoomOut">
-    <property name="geometry">
-     <rect>
       <x>730</x>
       <y>70</y>
       <width>41</width>
@@ -764,7 +763,7 @@
      </rect>
     </property>
     <property name="text">
-     <string>-</string>
+     <string>Zoom</string>
     </property>
    </widget>
    <widget class="QPushButton" name="ZoomOrig">
